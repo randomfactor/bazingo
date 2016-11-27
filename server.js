@@ -21,6 +21,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/jspm_packages', express.static('jspm_packages'));
+app.use('/styles', express.static('styles'));
+app.use('/dist', express.static('dist'));
 
 app.use('/', index);
 app.use('/users', users);

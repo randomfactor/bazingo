@@ -1,5 +1,13 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .splash
+    .message
+      |#{title}
+    i(class="fa fa-spinner fa-spin")
+
+  script(src="jspm_packages/npm/bluebird@3.4.1/js/browser/bluebird.min.js")
+  script(src="jspm_packages/system.js")
+  script(src="config.js")
+  script.
+      System.import('aurelia-bootstrapper');
