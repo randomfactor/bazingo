@@ -1,6 +1,6 @@
 {
-  "name": "bazingo",
-  "version": "0.0.0",
+  "name": "badabazingo",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -13,5 +13,13 @@
     "jade": "~1.11.0",
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.0"
-  }
+  },
+  "description": "simple tile placement game",
+  "main": "app.js",
+  "keywords": [
+    "2D",
+    "tetris"
+  ],
+  "author": "Randall S. Krebs",
+  "license": "CC0-1.0"
 }
