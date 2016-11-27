@@ -1,0 +1,13 @@
+### 27 November 2016
+
+> express --view=jade bazingo
+# http://expressjs.com/en/starter/generator.html
+
+. .gitignore
+# https://github.com/github/gitignore/blob/master/Node.gitignore
+
+> gedit BLOG
+# this file. this one right here. the one you're reading now.
+
+> git init
+
