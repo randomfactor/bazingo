@@ -48,3 +48,12 @@ jspm_packages
 
 # WebStorm
 .idea/
+
+# aurelia 1.1 gitignore
+bower_components
+.DS_STORE
+/dist
+build/reports
+coverage
+test/e2e/dist
+/export

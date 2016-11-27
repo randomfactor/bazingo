@@ -1,3 +1,8 @@
+### 26 November 2016
+
+> nvm install v6.9.1
+> nvm use v6.9.1
+
 ### 27 November 2016
 
 > express --view=jade bazingo
@@ -10,4 +15,11 @@
 # this file. this one right here. the one you're reading now.
 
 > git init
+> npm init
+> mv app.js server.js    # less confusion when adding aurelia
 
+# copy/merge aurelia 1.1 files into project
+> npm install
+> npm install -g jspm gulp
+> jspm registry config github
+> jspm install -y
