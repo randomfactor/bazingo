@@ -210,6 +210,10 @@ System.config({
       "aurelia-framework",
       "aurelia-fetch-client",
       "fetch"
+    ],
+    "welcome.js": [
+      "aurelia-framework",
+      "aurelia-fetch-client"
     ]
   },
   bundles: {

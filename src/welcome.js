@@ -1,10 +1,24 @@
 //import {computedFrom} from 'aurelia-framework';
+import {inject} from 'aurelia-framework';
+import {HttpClient} from 'aurelia-fetch-client';
 
+@inject(HttpClient)
 export class Welcome {
-  heading = 'Welcome to the Aurelia Navigation App!';
+  heading = 'List of TV Shows from RethinkDB:';
   firstName = 'John';
   lastName = 'Doe';
   previousValue = this.fullName;
+  tvShows = [];
+
+  constructor(http) {
+    this.http = http;
+  }
+
+  activate() {
+    return this.http.fetch('http://localhost:3000/api/tv-shows')
+      .then(response => response.json())
+      .then(data => this.tvShows = data.data);
+  }
 
   //Getters can't be directly observed, so they must be dirty checked.
   //However, if you tell Aurelia the dependencies, it no longer needs to dirty check the property.
