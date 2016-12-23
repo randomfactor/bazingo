@@ -15,9 +15,10 @@ export class Welcome {
   }
 
   activate() {
-    return this.http.fetch('http://localhost:3000/api/tv-shows')
+    /*return this.http.fetch('http://localhost:3000/api/tv-shows')
       .then(response => response.json())
-      .then(data => this.tvShows = data.data);
+      .then(data => this.tvShows = data.data);*/
+    this.tvShows = [{name: "Gilligan's Island"}, {name: "Lost in Space"}];
   }
 
   //Getters can't be directly observed, so they must be dirty checked.

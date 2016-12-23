@@ -17,7 +17,8 @@ describe('aurelia skeleton app', function() {
   });
 
   it('should display greeting', () => {
-    expect(poWelcome.getGreeting()).toBe('Welcome to the Aurelia Navigation App!');
+    // expect(poWelcome.getGreeting()).toBe('Welcome to the Aurelia Navigation App!');
+    expect(poWelcome.getGreeting()).toBe('List of TV Shows from RethinkDB:');
   });
 
   it('should automatically write down the fullname', () => {
