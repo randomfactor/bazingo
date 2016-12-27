@@ -173,3 +173,59 @@ div.au-stagger {
     opacity: 1;
   }
 }
+
+#game-screen {
+  width: 100%;
+  padding: 0 5em;
+}
+
+.game-area {
+  background-color: #073;
+  height: 540px;
+  width: 100%;
+  position: relative;
+}
+
+.piece-bg {
+  position: absolute;
+  height: 96px;
+  width: 96px;
+  top: 300px;
+  left: 80px;
+  background-image: url('/images/bg_piece.png');
+}
+
+.board-bg {
+  position: absolute;
+  height: 160px;
+  width: 160px;
+  top: 236px;
+  left: 276px;
+  background-image: url('/images/bg_piece.png');
+}
+
+#game-piece {
+  position: absolute;
+  height: 96px;
+  width: 96px;
+  top: 300px;
+  left: 80px;
+  background-image: transparent url('/images/transp.png') repeat center top;
+  z-index: 200;
+}
+
+#game-board {
+  position: absolute;
+  height: 160px;
+  width: 160px;
+  background-image: transparent url('/images/transp.png') repeat center top;
+  top: 236px;
+  left: 276px;
+  z-index: 100;
+}
+
+#game-piece img, #game-board img {
+  position: absolute;
+  opacity: 0.8;
+  z-index: 300;
+}
