@@ -2,17 +2,18 @@
  * Created by randall on 12/27/16.
  */
 import {bindable, inject} from 'aurelia-framework';
-import $ from 'bootstrap';
 import {DOM} from 'aurelia-pal';
+import {GameTray} from 'game-tray';
 
 
 @inject(DOM)
-export class GamePieceCustomElement {
+export class GamePieceCustomElement extends GameTray {
   @bindable value = 0x111;
   @bindable startLeft = 80;
   @bindable startTop = 300;
 
   constructor(DOM) {
+    super(DOM, 3, '/images/cand.png');
     this.DOM = DOM;
     this.pieceOptions = {
 
@@ -23,17 +24,6 @@ export class GamePieceCustomElement {
     this.diffY0 = 0;
     this.piece = null;
     // this.value = 0;
-
-    this.boxes = [];
-    for (let row = 0; row < 3; row += 1) {
-      for (let col = 0; col < 3; col += 1) {
-        let el = this.DOM.createElement('img');
-        el.src = '/images/cand.png';
-        el.style.left = `${col * 32}px`;
-        el.style.top = `${row * 32}px`;
-        this.boxes.unshift(el);
-      }
-    }
   }
 
   activate(room) {
@@ -47,36 +37,14 @@ export class GamePieceCustomElement {
   // }
 
   attached() {
+    this.tray = this.piece;
     this.renderBits(this.value);
   }
 
   valueChanged(newBits, oldBits) {
-    console.log(`game piece: ${newBits.toString(16)} (was ${oldBits.toString(16)})`);
+    console.log(`game piece: ${newBits.toString(16)} (was ${oldBits ? oldBits.toString(16) : 'null'})`);
 
     this.renderBits(newBits);
-  }
-
-  renderBits(newBits) {
-    if (this.piece) {
-      console.log(`renderBits: ${newBits.toString(16)}`);
-    } else {
-      console.log(`renderBits: skipping... ${newBits.toString(16)}`)
-    }
-    if (this.piece) {
-      while (this.piece.firstChild) {
-        this.piece.removeChild(this.piece.firstChild);
-      }
-
-      let idx = 0;
-      let bits = newBits >> 0;
-      while ((bits > 0) && (idx < 9)) {
-        if (bits & 1) {
-          this.piece.appendChild(this.boxes[idx]);
-        }
-        idx += 1;
-        bits = bits >> 1;
-      }
-    }
   }
 
   incrementValue() {
