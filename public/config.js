@@ -15,6 +15,7 @@ System.config({
     "aurelia-interactjs": "npm:aurelia-interactjs@2.0.7",
     "aurelia-loader-default": "npm:aurelia-loader-default@1.0.0",
     "aurelia-logging-console": "npm:aurelia-logging-console@1.0.0",
+    "aurelia-pal": "npm:aurelia-pal@1.2.0",
     "aurelia-pal-browser": "npm:aurelia-pal-browser@1.1.0",
     "aurelia-polyfills": "npm:aurelia-polyfills@1.1.1",
     "aurelia-router": "npm:aurelia-router@1.1.0",

@@ -1,20 +1,15 @@
 <template>
+  <require from="./game-piece"></require>
+  <require from="./game-board"></require>
   <section id="game-screen">
     <h2>Playing Game ${room.id}</h2>
     <div class="game-area">
       <div class="piece-bg"></div>
-        <div id="game-piece" interact-draggable.bind="pieceOptions" interact-dragmove.delegate="pieceMove($event)"
-          interact-dragend.delegate="pieceRestart($event)">
-          x: ${xPositionPiece}<br/>y: ${yPositionPiece}
-
-          <img src="/images/cand.png" style="left: 64px; top: 0;" />
-          <img src="/images/cand.png" style="left: 32px; top: 32px;" />
-        </div>
+      <game-piece value.two-way="pieceVal"></game-piece>
 
       <div class="board-bg"></div>
-        <div id="game-board">
-          <img src="/images/occ.png" style="left: 32px; top: 64px;" />
-        </div>
+      <game-board value.two-way="boardVal" piece-value.bind="pieceVal"></game-board>
+
 
     </div>
   </section>
