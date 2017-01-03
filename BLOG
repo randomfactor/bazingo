@@ -23,3 +23,7 @@
 > npm install -g jspm gulp
 > jspm registry config github
 > jspm install -y
+
+# interact.js
+> jspm install aurelia-interactjs
+> jspm install aurelia-event-aggregator

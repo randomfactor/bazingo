@@ -1,6 +1,6 @@
 <template>
   <div id="game-piece" interact-draggable.bind="pieceOptions" interact-dragmove.delegate="pieceMove($event)"
-       click.delegate="incrementValue()" interact-dragstart.delegate="pieceMoveStart($event)"
-       tap.delegate="incrementValue()" ref="piece">
+       click.delegate="lockPiece($event)" interact-dragstart.delegate="pieceMoveStart($event)"
+       tap.delegate="lockPiece($event)" ref="piece">
   </div>
 </template>

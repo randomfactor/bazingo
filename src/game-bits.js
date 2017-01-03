@@ -8,6 +8,10 @@ export class GameBits {
     this.bits = bits;
   }
 
+  set(val) {
+    this.bits = val;
+  }
+
   // val is 3x3. offsets relative to lower-right corner
   // offsets range from -1 to 3. it is possible for piece
   // to go beyond the board edge by one row or column
