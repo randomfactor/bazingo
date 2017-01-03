@@ -4,17 +4,19 @@
 import {bindable, inject} from 'aurelia-framework';
 import {DOM} from 'aurelia-pal';
 import {GameTray} from 'game-tray';
+import {EventAggregator} from 'aurelia-event-aggregator';
+import * as GameMsg from 'messages';
 
 
-@inject(DOM)
+@inject(DOM, EventAggregator)
 export class GamePieceCustomElement extends GameTray {
   @bindable value = 0x111;
   @bindable startLeft = 80;
   @bindable startTop = 300;
 
-  constructor(DOM) {
-    super(DOM, 3, '/images/cand.png');
-    this.DOM = DOM;
+  constructor(dom, ea) {
+    super(dom, 3, '/images/cand.png');
+    this.ea = ea;
     this.pieceOptions = {
 
     };
@@ -24,6 +26,15 @@ export class GamePieceCustomElement extends GameTray {
     this.diffY0 = 0;
     this.piece = null;
     // this.value = 0;
+
+    ea.subscribe(GameMsg.GamePieceSnap, msg => {
+      console.log(`Piece snap: ${msg}`);
+      this.pieceSnap(msg.posX, msg.posY);
+    });
+    ea.subscribe(GameMsg.GameDropReject, msg => {
+      console.log(`Piece reject: ${msg}`);
+      this.pieceRestart();
+    })
   }
 
   activate(room) {
@@ -70,11 +81,12 @@ export class GamePieceCustomElement extends GameTray {
     this.piece.style.left = `${this.diffX0 + event.clientX}px`;
   }
 
-  pieceRestart(customEvent) {
-    let event = customEvent.detail;
-    // console.log("event", event);
+  pieceSnap(posX, posY) {
+    this.piece.style.top = `${posY}px`;
+    this.piece.style.left = `${posX}px`;
+  }
 
-    //$(this.piece).css({left: this.startLeft, top: this.startTop});
+  pieceRestart() {
     this.piece.style.top = `${this.startTop}px`;
     this.piece.style.left = `${this.startLeft}px`;
   }
