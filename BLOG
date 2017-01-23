@@ -27,3 +27,11 @@
 # interact.js
 > jspm install aurelia-interactjs
 > jspm install aurelia-event-aggregator
+
+### 23 January 2017
+
+# aurelia-interact passes the injected element to interact when "interact-draggable.bind"
+# is specified in a view's attributes.
+
+# in "game-piece.js", still need to figure out why interact-draggable::this.element is no
+# the same object as GamePiece::this.piece.
