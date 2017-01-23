@@ -6,17 +6,19 @@ import {DOM} from 'aurelia-pal';
 import {GameTray} from 'game-tray';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import * as GameMsg from 'messages';
+import * as Interact from 'interactjs';
 
 
-@inject(DOM, EventAggregator)
+@inject(DOM, EventAggregator, Interact)
 export class GamePieceCustomElement extends GameTray {
   @bindable value = 0x111;
   @bindable startLeft = 80;
   @bindable startTop = 300;
 
-  constructor(dom, ea) {
+  constructor(dom, ea, interact) {
     super(dom, 3, '/images/cand.png');
     this.ea = ea;
+    this.interact = interact;
     this.pieceOptions = {
 
     };
@@ -96,7 +98,8 @@ export class GamePieceCustomElement extends GameTray {
     let event = customEvent.detail;
     if (this.isDropped) {
       debugger;
-      console.log(this.piece.options);
+      this.interact(this.piece).draggable(false);
+      console.log(this.piece);
     }
   }
 }
