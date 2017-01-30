@@ -35,3 +35,12 @@
 
 # in "game-piece.js", still need to figure out why interact-draggable::this.element is no
 # the same object as GamePiece::this.piece.
+
+### 28 January 2017
+
+> jspm install interact=npm:interact.js     # how to deal with funky dot js
+# added bazingo-draggable.js to bind to 'enabled'
+
+> jspm install npm:aurelia-mobile-plugin
+# this is causing problems. mouse clicks are being synthesized to taps and
+# taps are being synthesized to mouse clicks. WHY??!!

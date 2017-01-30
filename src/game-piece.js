@@ -100,17 +100,21 @@ export class GamePieceCustomElement extends GameTray {
   // click event always follows drag
   lockPiece(customEvent) {
     let event = customEvent.detail;
+    this.ea.publish(new GameMsg.GameLogMessage(`piece locked, event: (${customEvent.constructor.name})`));
+    if (this.isDropped) {
+      console.log('Draggable: ' + this.piece.toString());
+      this.dragEnabled = false;
+    }
+  }
 
-    let msg = new GameMsg.GameLogMessage(`piece locked (${this.noClick})`);
-    this.ea.publish(msg);
-
-    if (this.noClick) {
+  extraClickLockPiece(customEvent) {
+    let event = customEvent.detail;
+    if (this.noClick && (customEvent instanceof MouseEvent)) {
+      this.ea.publish(new GameMsg.GameLogMessage(`piece locked, first click, event: (${customEvent.constructor.name})`));
       this.noClick = false;   // ignore the click that follows drag
     } else {
-      if (this.isDropped) {
-        console.log('Draggable: ' + this.piece.toString());
-        this.dragEnabled = false;
-      }
+      this.lockPiece(customEvent);
     }
+
   }
 }
