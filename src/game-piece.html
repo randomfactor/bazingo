@@ -1,6 +1,9 @@
 <template>
-  <div id="game-piece" interact-draggable.bind="pieceOptions" interact-dragmove.delegate="pieceMove($event)"
-       click.delegate="lockPiece($event)" interact-dragstart.delegate="pieceMoveStart($event)"
-       tap.delegate="lockPiece($event)" ref="piece">
+  <require from="./bazingo-draggable"></require>
+
+  <div id="game-piece" bazingo-draggable="value.bind: pieceOptions; enabled.bind: dragEnabled"
+       interact-dragmove.delegate="pieceMove($event)" interact-dragstart.delegate="pieceMoveStart($event)"
+       click.trigger="lockPiece($event)"
+       ref="piece">
   </div>
 </template>

@@ -6,28 +6,31 @@ import {DOM} from 'aurelia-pal';
 import {GameTray} from 'game-tray';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import * as GameMsg from 'messages';
-import * as Interact from 'interactjs';
 
 
-@inject(DOM, EventAggregator, Interact)
+@inject(DOM, EventAggregator)
 export class GamePieceCustomElement extends GameTray {
   @bindable value = 0x111;
   @bindable startLeft = 80;
   @bindable startTop = 300;
 
-  constructor(dom, ea, interact) {
+  constructor(dom, ea) {
     super(dom, 3, '/images/cand.png');
     this.ea = ea;
-    this.interact = interact;
     this.pieceOptions = {
-
+      action: {
+        enabled: true
+      },
+      interactable: { }
     };
+    this.dragEnabled = true;
     this.posLeft = this.startLeft;
     this.posTop = this.startTop;
     this.diffX0 = 0;
     this.diffY0 = 0;
     this.piece = null;
     this.isDropped = false;
+    this.noClick = false;
     // this.value = 0;
 
     ea.subscribe(GameMsg.GamePieceSnap, msg => {
@@ -45,11 +48,6 @@ export class GamePieceCustomElement extends GameTray {
     console.log('room id: ', room.id);
   }
 
-  // attached() {
-  //   let qry = $('#game-piece');
-  //   let thePiece = qry[0];
-  // }
-
   attached() {
     this.tray = this.piece;
     this.renderBits(this.value);
@@ -66,6 +64,7 @@ export class GamePieceCustomElement extends GameTray {
     this.diffY0 = this.piece.offsetTop - event.clientY0;
     this.diffX0 = this.piece.offsetLeft - event.clientX0;
     this.isDropped  = false;
+    this.noClick = true;
   }
 
   pieceMove(customEvent) {
@@ -85,21 +84,33 @@ export class GamePieceCustomElement extends GameTray {
     this.piece.style.top = `${posY}px`;
     this.piece.style.left = `${posX}px`;
     this.isDropped  = true;
+
+
+    let msg = new GameMsg.GameLogMessage(`piece snapped to board`);
+    this.ea.publish(msg);
   }
 
   pieceRestart() {
     this.piece.style.top = `${this.startTop}px`;
     this.piece.style.left = `${this.startLeft}px`;
     this.isDropped = false;
+    this.noClick = false;
   }
 
-  // TODO: need to find a way to disable dragging piece after locked
+  // click event always follows drag
   lockPiece(customEvent) {
     let event = customEvent.detail;
-    if (this.isDropped) {
-      debugger;
-      this.interact(this.piece).draggable(false);
-      console.log(this.piece);
+
+    let msg = new GameMsg.GameLogMessage(`piece locked (${this.noClick})`);
+    this.ea.publish(msg);
+
+    if (this.noClick) {
+      this.noClick = false;   // ignore the click that follows drag
+    } else {
+      if (this.isDropped) {
+        console.log('Draggable: ' + this.piece.toString());
+        this.dragEnabled = false;
+      }
     }
   }
 }
