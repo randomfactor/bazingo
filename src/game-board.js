@@ -24,6 +24,7 @@ export class GameBoardCustomElement extends GameTray {
     this.ea = ea;
     this.board = null;
     this.bits = new GameBits(0);
+    this.animate = false;
   }
 
   attached() {
@@ -36,6 +37,14 @@ export class GameBoardCustomElement extends GameTray {
 
     this.renderBits(newBits);
     this.bits.set(newBits);
+  }
+
+  gameStart() {
+    this.animate = true;
+  }
+
+  gameOver() {
+    this.animate = false;
   }
 
   pieceDrop(evt) {

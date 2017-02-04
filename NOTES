@@ -1,0 +1,52 @@
+3 February 2017
+----------------
+
+Finally resolved UI problems related to lockPiece.
+
+2x2 - 4 * 1 pts = 4
+2x3 - 6 * 3 pts = 18
+3x3 - 9 * 5 pts = 45
+
+
+Next Steps
+----------
+
+Enter game room during intermission:
+- set expiration timer value to game start
+- set points to zero
+- initialize positions, prevent dragging, set board and game piece values to zero
+- (optional) at <15s, update game-piece preview
+
+Start of turn:
+- initialize game piece position
+- initialize game piece value, allow dragging
+- set turn expiration timer
+- set new game board value
+- (optional) animation of bits removed from game board
+- set new value of points
+- (optional) update current game leaders {opponent-name, opponent-score, opponent-game-board}
+- (optional) update game-piece preview
+
+Player drops piece, legal position:
+- snap to board
+
+Player drops piece, illegal position:
+- initialize game piece position
+
+Player locks piece:
+- set game piece position to start, prevent dragging
+- set game piece value to zero
+- set game board value (logical OR of piece and prior bits)
+
+End of game:
+- set game piece position to start, prevent dragging
+- set game piece value to zero
+- set game board to final value
+- set final value of points
+- set expiration timer to beginning of next game
+- (optional) animate bonus for unoccupied bits
+- show players final scores/payoffs
+
+Leave game room:
+- if intermission, allow with no penalty
+- if during play, set penalty time until welfare payment

@@ -28,7 +28,6 @@ export class GamePieceCustomElement extends GameTray {
     this.posTop = this.startTop;
     this.diffX0 = 0;
     this.diffY0 = 0;
-    this.piece = null;
     this.isDropped = false;
     this.noClick = false;
     // this.value = 0;
@@ -57,6 +56,8 @@ export class GamePieceCustomElement extends GameTray {
     console.log(`game piece: ${newBits.toString(16)} (was ${oldBits ? oldBits.toString(16) : 'null'})`);
 
     this.renderBits(newBits);
+
+    this.dragEnabled = (newBits > 0);   // disable dragging when no visible bits
   }
 
   pieceMoveStart(customEvent) {
