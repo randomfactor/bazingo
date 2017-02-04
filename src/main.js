@@ -4,8 +4,7 @@ export function configure(aurelia) {
   aurelia.use
     .standardConfiguration()
     .developmentLogging()
-    .plugin("aurelia-interactjs")
-    .plugin("aurelia-mobile-plugin");
+    .plugin("aurelia-interactjs");
 
   //Uncomment the line below to enable animation.
   //aurelia.use.plugin('aurelia-animator-css');

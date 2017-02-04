@@ -21,7 +21,8 @@ export class BazingoDraggableCustomAttribute extends InteractBase {
       .on('dragstart', (event) => this.dispatch('interact-dragstart', event))
       .on('dragmove', (event) => this.dispatch('interact-dragmove', event))
       .on('draginertiastart', (event) => this.dispatch('interact-draginertiastart', event))
-      .on('dragend', (event) => this.dispatch('interact-dragend', event));
+      .on('dragend', (event) => this.dispatch('interact-dragend', event))
+      .on('tap', (event) => this.dispatch('interact-tap', event));
   }
 
   enabledChanged(newValue, oldValue) {
