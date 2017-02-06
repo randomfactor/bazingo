@@ -175,14 +175,15 @@ div.au-stagger {
 }
 
 #game-screen {
-  width: 100%;
-  padding: 0 5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .game-area {
-  background-color: #073;
+  background-color: #052;
   height: 540px;
-  width: 100%;
+  width: 540px;
   position: relative;
 }
 
@@ -228,4 +229,31 @@ div.au-stagger {
   position: absolute;
   opacity: 0.8;
   z-index: 300;
+}
+
+.game-info {
+  width: 100%;
+}
+
+.game-score, .game-turn, .game-timer {
+  color: yellow;
+  font-size: 24pt;
+  border: double yellow 5px;
+  padding: 5px;
+}
+
+.game-score, .game-timer {
+  float: right;
+}
+
+.game-timer {
+  margin-right: 64px;
+}
+
+.piece-preview {
+  border: double lightsalmon 5px;
+}
+
+.piece-preview img {
+  margin: 8px;
 }

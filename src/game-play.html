@@ -2,16 +2,26 @@
   <require from="./game-piece"></require>
   <require from="./game-board"></require>
   <section id="game-screen">
-    <h2>Playing Game ${room.id}</h2>
-    <div class="game-area" ref="gameArea">
-      <div class="piece-bg"></div>
-      <game-piece value.two-way="pieceVal" view-model.ref="piece"></game-piece>
+    <div>
+      <h2>Playing Game ${room.id}</h2>
+      <div class="game-area" ref="gameArea">
+        <div class="game-info">
+          <div class="game-score">${gameInfo.score}</div>
+          <div class="game-timer">${gameInfo.timer}</div>
+          <div class="game-turn">${gameInfo.turn}</div>
+        </div>
+        <div class="piece-preview">
+          <img repeat.for="psrc of gameInfo.preview" src="/images/${psrc.toString(8)}.png">
+        </div>
+        <div class="piece-bg"></div>
+        <game-piece value.two-way="pieceVal" view-model.ref="piece"></game-piece>
 
-      <div class="board-bg"></div>
-      <game-board value.two-way="boardVal" piece-value.bind="pieceVal" view-model.ref="board"></game-board>
+        <div class="board-bg"></div>
+        <game-board value.two-way="boardVal" piece-value.bind="pieceVal" view-model.ref="board"></game-board>
 
 
+      </div>
+      <button click.delegate="testGameState($event)">Click Me!</button>
     </div>
-    <button click.delegate="testGameState($event)">Click Me!</button>
   </section>
 </template>
