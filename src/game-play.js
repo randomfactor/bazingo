@@ -2,7 +2,7 @@
  * Created by randall on 12/26/16.
  */
 
-import {bindable, inject} from 'aurelia-framework';
+import {bindable, inject, computedFrom} from 'aurelia-framework';
 import {DOM} from 'aurelia-pal';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import * as GameMsg from 'messages';
@@ -21,7 +21,47 @@ export class GamePlay {
     // this.board is a reference to the view model of the game board
     // this.piece is a reference to the view model of the game piece
 
-    this.gameInfo = {score: "0 pts.", timer: "-:--", turn: "Starting...", preview: [0o626, 0x155]}
+    this.gameInfo = {score: "0 pts.", timer: 0, turn: "Starting...", preview: [0o626, 0x155]}
+    this.runningTimer = null;
+  }
+
+  @computedFrom("gameInfo.timer")
+  get timerMinutes() {
+    if (this.gameInfo.timer <= 0) {
+      return ('-');
+    }
+    let m = Math.floor(this.gameInfo.timer / (60 * 1000));
+    return m.toString();
+  }
+
+  @computedFrom("gameInfo.timer")
+  get timerSeconds() {
+    if (this.gameInfo.timer <= 0) {
+      return ('--');
+    }
+    let m = Math.floor(this.gameInfo.timer / (60 * 1000));
+    let s = Math.floor((this.gameInfo.timer - m * 60 * 1000) / 1000);
+    s = s + '';
+    return s.length >= 2 ? s : '0' + s;
+  }
+
+  runTimer(val) {
+    if (val) {
+      if (!this.runningTimer) {
+        this.runningTimer = setInterval(() => {
+          this.gameInfo.timer = this.gameInfo.timer - 1000;
+          if (this.gameInfo.timer <= 0) {
+            this.gameInfo.timer = 0;
+            this.runTimer(false);
+          }
+        }, 1000);
+      }
+    } else {
+      if (this.runningTimer) {
+        clearInterval(this.runningTimer);
+        this.runningTimer = null;
+      }
+    }
   }
 
   logMessage(msg) {
@@ -38,9 +78,10 @@ export class GamePlay {
         this.pieceVal = 0;
         this.boardVal = 0;
         this.gameInfo.score = "0 pts.";
-        this.gameInfo.timer = "-:--";
+        this.gameInfo.timer = 119333;
         this.gameInfo.turn = "Starting...";
         this.gameInfo.preview = [0o20, 0o420, 0o124];
+        this.runTimer(true);
         this.gameState = 1;
         break;
 
@@ -50,9 +91,10 @@ export class GamePlay {
         this.pieceVal = 0o30;
         this.boardVal = 0x1fac400;
         this.gameInfo.score = "345 pts.";
-        this.gameInfo.timer = "0:07";
+        this.gameInfo.timer = 7000;
         this.gameInfo.turn = "Turn 29";
         this.gameState = 2;
+        this.runTimer(true);
         this.gameInfo.preview = [0o272, 0o20, 0o420];
         break;
     }

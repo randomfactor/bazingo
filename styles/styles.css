@@ -181,7 +181,7 @@ div.au-stagger {
 }
 
 .game-area {
-  background-color: #052;
+  background-color: #005020;
   height: 540px;
   width: 540px;
   position: relative;
@@ -248,6 +248,12 @@ div.au-stagger {
 
 .game-timer {
   margin-right: 64px;
+  font-family: monospace;
+}
+
+.game-timer-blink {
+  animation:timerBlink 1s infinite;
+  -webkit-animation:timerBlink 1s infinite; /* Safari and Chrome */
 }
 
 .piece-preview {
@@ -256,4 +262,16 @@ div.au-stagger {
 
 .piece-preview img {
   margin: 8px;
+}
+
+@keyframes timerBlink /* Firefox */
+{
+  0%  {color:yellow;}
+  100%   {color:#005020;}
+}
+
+@-webkit-keyframes timerBlink /* Firefox */
+{
+  0%   {color:yellow;}
+  100%   {color:#005020;}
 }
