@@ -88,7 +88,7 @@ export class GamePlay {
       case 1:
         this.piece.pieceRestart();
         this.board.gameStart();
-        this.pieceVal = 0o30;
+        this.pieceVal = this._pieces[5];
         this.boardVal = 0x1fac400;
         this.gameInfo.score = "345 pts.";
         this.gameInfo.timer = 7000;

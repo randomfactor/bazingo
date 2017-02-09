@@ -26,6 +26,14 @@ export class GameDropReject {
   }
 }
 
+export class GamePieceLock {
+  constructor(posX, posY, pieceVal) {
+    this.posX = posX;
+    this.posY = posY;
+    this.pieceVal = pieceVal;
+  }
+}
+
 export class GameLogMessage {
   constructor(msg) {
     this.msg = msg;

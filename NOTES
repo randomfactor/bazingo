@@ -49,4 +49,22 @@ End of game:
 
 Leave game room:
 - if intermission, allow with no penalty
-- if during play, set penalty time until welfare payment
+- if during play, set penalty time until "on poverty" payment
+
+
+Game Controller Protocol
+------------------------
+
+Inquire game state
+  Arguments: roomId, gameId, playerId
+  Returns: gameState: {roomId, gameId, gameTurn, turnTimer, pieceVal, piecePreview: [pieceVal0, pieceVal1, ...]}
+           playerState: {playerId, playerPts, boardVal}
+
+Inquire players
+  Arguments: roomId, gameId
+  Returns: leaders: [{playerId, nickName, boardVal, pts}, ...]
+           players: [{playerId, nickName}, ...]
+
+Move
+  Arguments: roomId, gameId, playerId, gameTurn, indX, indY
+  Returns: <same as Inquire game state>

@@ -25,6 +25,11 @@ export class GameBoardCustomElement extends GameTray {
     this.board = null;
     this.bits = new GameBits(0);
     this.animate = false;
+
+
+    ea.subscribe(GameMsg.GamePieceLock, msg => {
+      this.assimilate(msg.pieceVal, msg.posX, msg.posY);
+    });
   }
 
   attached() {
@@ -63,5 +68,13 @@ export class GameBoardCustomElement extends GameTray {
       let msg = new GameMsg.GameDropReject(piece.offsetLeft, piece.offsetTop);
       this.ea.publish(msg);
     }
+  }
+
+  assimilate(pieceVal, posX, posY) {
+    let indX = toBoardIndex(posX - this.board.offsetLeft);
+    let indY = toBoardIndex(posY - this.board.offsetTop);
+
+    let newBits = this.bits.combine(pieceVal, 2 - indX, 2 - indY);
+    this.value = newBits;       // TODO: is renderBits needed here?
   }
 }

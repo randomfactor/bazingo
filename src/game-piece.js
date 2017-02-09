@@ -105,6 +105,10 @@ export class GamePieceCustomElement extends GameTray {
     if (this.isDropped) {
       console.log('Draggable: ' + this.piece.toString());
       this.dragEnabled = false;
+
+      this.ea.publish(new GameMsg.GamePieceLock(this.piece.offsetLeft, this.piece.offsetTop, this.value));
+      this.value = 0;
+      this.pieceRestart();
     }
   }
 
