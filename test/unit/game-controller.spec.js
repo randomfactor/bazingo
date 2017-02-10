@@ -20,21 +20,34 @@ class TimeMachine {
 };
 
 describe('the GameController', () => {
-  it('returns 6s left in turn after 9s passes', (done) => {
+  it('scores a game wherein the player makes no moves', (done) => {
     let tm = new TimeMachine();
     let sut = new GameController(tm);
     sut.initialize();
-    sut.join("12345", "barack");
+    sut.joinRoom("12345", "barack");
     tm.advance(1000);     // this is ignored. game remains in stasis until tickled
     sut.getGameStateForPlayer("12345").then((data) => {
       expect(data.gameState).toBeDefined("missing game state");
-      expect(data.gameState.turnTimer).toBe(15000, "wrong number of ms remaining");
+      expect(data.gameState.gameTurn).toBe(-1, "wrong turn number for game start");
+      expect(data.gameState.turnTimer).toBe(15000, "wrong number of ms remaining to game start");
       tm.advance(9000);
       return (sut.getGameStateForPlayer("12345"));
     }).then((data) => {
-      expect(data.gameState).toBeDefined("missing game state");
-      expect(data.gameState.turnTimer).toBe(6000, "wrong number of ms remaining");
-
+      expect(data.gameState.gameTurn).toBe(-1, "wrong turn number for 6 seconds before start");
+      expect(data.gameState.turnTimer).toBe(6000, "wrong number of ms remaining to game start");
+      tm.advance(9000);
+      return (sut.getGameStateForPlayer("12345"));
+    }).then((data) => {
+      expect(data.gameState.gameTurn).toBe(0, "wrong turn number for first turn");
+      expect(data.gameState.turnTimer).toBe(12000, "wrong number of ms remaining in first turn");
+      expect(data.playerState).toBeDefined("missing player state");
+      expect(data.playerState.boardVal).toBe(0, "wrong board configuration");
+      tm.advance(12000);
+      return (sut.getGameStateForPlayer("12345"));
+    }).then((data) => {
+      expect(data.gameState.gameTurn).toBe(1, "wrong turn number for first turn");
+      expect(data.gameState.turnTimer).toBe(15000, "wrong number of ms remaining in first turn");
+      expect(data.playerState.playerPts).toBe(-7, "wrong number of penalty points for expired turn timer");
       done();
     });
   });

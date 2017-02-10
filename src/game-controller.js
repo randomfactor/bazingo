@@ -24,8 +24,8 @@ export class GameController {
     this.pieceOrder = [0o262, 0o323, 0o260, 0o62];  // TODO: randomize
   }
 
-  join(playerId, nickName) {
-    this.players[playerId] = {name: nickName, board: new GameBits(0), points: 0, moves: []};
+  joinRoom(playerId, nickName) {
+    this.players.set(playerId, {name: nickName, board: new GameBits(0), points: 0, moves: []});
   }
 
   getGameStateForPlayer(playerId) {
@@ -33,13 +33,21 @@ export class GameController {
       let now = this.gcf.getCurrentTime();
       this.checkNextTurn(now);
 
+      // compute game state
       let currentPiece = this.gs.turn >= 0 && this.gs.turn < this.pieceOrder.length ? this.pieceOrder[this.gs.turn] : 0;
       let preview = this.pieceOrder.slice(this.gs.turn + 1, this.gs.turn + 4);
       let gs = {roomId: "SinglePlayer", gameId: this.gs.id, gameTurn: this.gs.turn,
         turnTimer: (this.gs.timeout - (now.getTime() - this.gs.startedAt.getTime())),
         pieceVal: currentPiece, piecePreview: preview};
 
-      resolve({gameState: gs, playerState: {}});
+      // compute player state
+      let player = this.players.get(playerId);
+      let ps = {};
+      if (player) {
+        ps = {playerId: playerId, playerPts: player.points, boardVal: player.board.bits};
+      }
+
+      resolve({gameState: gs, playerState: ps});
     });
     return p;
   }
@@ -68,7 +76,7 @@ export class GameController {
       let missedTurns = Math.floor((curTime - startTime) / turnDur);
       missedTurns = Math.min(missedTurns, this.pieceOrder.length - this.gs.turn);
       if (missedTurns > 0) {
-        checkPlayerPenalty(this.gs.gameTurn, this.gs.gameTurn + missedTurns);
+        this.checkPlayerPenalty(this.gs.turn, this.gs.turn + missedTurns);
         this.gs.turn += missedTurns;
         startTime += (turnDur * missedTurns);
         this.gs.startedAt = new Date(startTime);
@@ -78,15 +86,30 @@ export class GameController {
 
   checkPlayerPenalty(startTurn, curTurn) {
     // go through players making sure player made one move for each turn
-    // TODO: implement this
+    curTurn = Math.min(curTurn, this.pieceOrder.length);
+    startTurn = Math.max(startTurn, 0);
+    console.log(`checking player penalties from ${startTurn} to ${curTurn}`);
+    for (let turnNo = startTurn; turnNo < curTurn; turnNo++) {
+      for (let [k, val] of this.players) {
+        if (typeof val.moves[turnNo] == 'undefined') {
+          console.log(`player ${k} penalized`);
+          val.points += GameController._penaltyPts;
+        }
+      }
+    }
   }
 
+  static get _penaltyPts() { return -7; }
+  static get _points4() { return 4; }   // 4 bits at 1 pt per bit
+  static get _points6() { return 18; }  // 6 bits at 3 pts per bit
+  static get _points9() { return 45; }  // 9 bits at 5 pts per bit
 
   static get _turnDur() {
     return 15 * 1000;
   }
 
-  _allPieces = [
+  static get _allPieces() {
+    return [
       0o20, 0o30, 0o220, 0o420, 0o120,                        // onesies, twosies
       0o260, 0o230, 0o62, 0o32,                               // corners
       0o70, 0o222, 0o421, 0o124,                              // three in row
@@ -96,4 +119,5 @@ export class GameController {
       0o570, 0o75, 0o626, 0o323,                              // locks
       0o525, 0o272                                            // checkerboard, cross
     ];
+  }
 };
