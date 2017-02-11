@@ -15,7 +15,9 @@ Enter game room during intermission:
 - set expiration timer value to game start
 - set points to zero
 - initialize positions, prevent dragging, set board and game piece values to zero
-- (optional) at <15s, update game-piece preview
+- set game piece position to start, prevent dragging
+- set game piece value to zero
+- set game board value to zero
 
 Start of turn:
 - initialize game piece position

@@ -20,8 +20,8 @@ export class GameController {
   }
 
   initialize() {
-    this.gs = {id: "practice", turn: -1, timeout: GameController._turnDur, startedAt: null};
-    this.pieceOrder = [0o262, 0o323, 0o260, 0o62];  // TODO: randomize
+    this.gs = {id: "practice", turn: -1, timeout: GameController._intermissionDur, startedAt: null};
+    this.pieceOrder = [0o262, 0o323, 0o260, 0o32];  // TODO: randomize
   }
 
   joinRoom(playerId, nickName) {
@@ -53,7 +53,18 @@ export class GameController {
   }
 
   recordPlayerMove(playerId, turn, offsetX, offsetY) {
-    // TODO: implement this.
+    let player = this.players.get(playerId);
+    if (player && this.gs.turn >= 0 && this.gs.turn < this.pieceOrder.length
+      && turn == this.gs.turn && typeof player.moves[this.gs.turn] == 'undefined') {
+      if (typeof offsetX == 'number' && typeof offsetY == 'number') {
+        let beforeBits = player.board.bits;
+        let pieceVal = this.pieceOrder[this.gs.turn];
+        if (player.board.combine(pieceVal, offsetX, offsetY) != beforeBits) {
+          player.moves[this.gs.turn] = {piece: pieceVal, offX: offsetX, offY: offsetY};
+        }
+      }
+    }
+    return this.getGameStateForPlayer(playerId);
   }
   /*
 
@@ -78,8 +89,43 @@ export class GameController {
       if (missedTurns > 0) {
         this.checkPlayerPenalty(this.gs.turn, this.gs.turn + missedTurns);
         this.gs.turn += missedTurns;
-        startTime += (turnDur * missedTurns);
-        this.gs.startedAt = new Date(startTime);
+        if (this.gs.turn < this.pieceOrder.length) {
+          startTime += (turnDur * missedTurns);
+          this.gs.startedAt = new Date(startTime);
+          this.gs.timeout = GameController._turnDur;
+        } else {
+          this.gs.turn = -1;
+          this.gs.startedAt = new Date(curTime);
+          this.gs.timeout = GameController._intermissionDur;
+        }
+      }
+    }
+  }
+
+  skipToNextTurn() {
+    if (this.gs.turn < this.pieceOrder.length) {
+      this.updatePlayerScores(this.gs.turn);
+      this.gs.turn += 1;
+      this.gs.startedAt = this.gcf.getCurrentTime();
+      if (this.gs.turn < this.pieceOrder.length) {
+        this.gs.timeout = GameController._turnDur;
+      } else {
+        this.gs.timeout = GameController._intermissionDur;
+        this.gs.turn = -1;
+      }
+    }
+  }
+
+  updatePlayerScores(turnNo) {
+    for (let [k, val] of this.players) {
+      if (turnNo < 0) {
+        val.points = 0;     // initializing game
+      } else if (typeof val.moves[turnNo] == 'undefined') {
+        console.log(`player ${k} penalized`);
+        val.points += GameController._penaltyPts;
+      } else {
+        // players board may contain scoring blocks
+        val.points += val.board.scoreBlocks(0);
       }
     }
   }
@@ -90,12 +136,7 @@ export class GameController {
     startTurn = Math.max(startTurn, 0);
     console.log(`checking player penalties from ${startTurn} to ${curTurn}`);
     for (let turnNo = startTurn; turnNo < curTurn; turnNo++) {
-      for (let [k, val] of this.players) {
-        if (typeof val.moves[turnNo] == 'undefined') {
-          console.log(`player ${k} penalized`);
-          val.points += GameController._penaltyPts;
-        }
-      }
+      this.updatePlayerScores(turnNo);
     }
   }
 
@@ -104,9 +145,8 @@ export class GameController {
   static get _points6() { return 18; }  // 6 bits at 3 pts per bit
   static get _points9() { return 45; }  // 9 bits at 5 pts per bit
 
-  static get _turnDur() {
-    return 15 * 1000;
-  }
+  static get _turnDur() { return 15 * 1000; }
+  static get _intermissionDur() { return 120 * 1000; }
 
   static get _allPieces() {
     return [
