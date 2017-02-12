@@ -29,7 +29,7 @@ export class GameBits {
     // now safe to do shift test
     let shiftAmt = offY * 5 + offX;
     let piece5 = this.spreadPiece(val, shiftAmt);
-    console.log(`piece5 bits: 0x${piece5.toString(16)}`);
+    //console.log(`piece5 bits: 0x${piece5.toString(16)}`);
 
     return !(piece5 & this.bits);
   }
@@ -42,7 +42,7 @@ export class GameBits {
       let shiftAmt = offY * 5 + offX;
       let piece5 = this.spreadPiece(val, shiftAmt);
       this.bits = piece5 | this.bits;
-      console.log(`combined bits: 0x${this.bits.toString(16)}`);
+      //console.log(`combined bits: 0x${this.bits.toString(16)}`);
     }
 
     return this.bits;

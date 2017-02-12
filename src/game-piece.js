@@ -87,8 +87,8 @@ export class GamePieceCustomElement extends GameTray {
     this.isDropped  = true;
 
 
-    let msg = new GameMsg.GameLogMessage(`piece snapped to board`);
-    this.ea.publish(msg);
+    //let msg = new GameMsg.GameLogMessage(`piece snapped to board`);
+    //this.ea.publish(msg);
   }
 
   pieceRestart() {
@@ -101,9 +101,9 @@ export class GamePieceCustomElement extends GameTray {
   // click event always follows drag
   lockPiece(customEvent) {
     let event = customEvent.detail;
-    this.ea.publish(new GameMsg.GameLogMessage(`piece locked, event: (${customEvent.constructor.name})`));
+    //this.ea.publish(new GameMsg.GameLogMessage(`piece locked, event: (${customEvent.constructor.name})`));
     if (this.isDropped) {
-      console.log('Draggable: ' + this.piece.toString());
+      //console.log('Draggable: ' + this.piece.toString());
       this.dragEnabled = false;
 
       this.ea.publish(new GameMsg.GamePieceLock(this.piece.offsetLeft, this.piece.offsetTop, this.value));
@@ -115,7 +115,7 @@ export class GamePieceCustomElement extends GameTray {
   extraClickLockPiece(customEvent) {
     let event = customEvent.detail;
     if (this.noClick && (customEvent instanceof MouseEvent)) {
-      this.ea.publish(new GameMsg.GameLogMessage(`piece locked, first click, event: (${customEvent.constructor.name})`));
+      //this.ea.publish(new GameMsg.GameLogMessage(`piece locked, first click, event: (${customEvent.constructor.name})`));
       this.noClick = false;   // ignore the click that follows drag
     } else {
       this.lockPiece(customEvent);

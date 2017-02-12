@@ -28,9 +28,9 @@ export class GameTray {
 
   renderBits(newBits) {
     if (this.tray) {
-      console.log(`renderBits[${this.id}]: ${newBits.toString(16)}`);
+      //console.log(`renderBits[${this.id}]: ${newBits.toString(16)}`);
     } else {
-      console.log(`renderBits[${this.id}]: skipping... ${newBits.toString(16)}`)
+      //console.log(`renderBits[${this.id}]: skipping... ${newBits.toString(16)}`)
     }
     if (this.tray) {
       while (this.tray.firstChild) {

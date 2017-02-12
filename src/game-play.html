@@ -8,10 +8,13 @@
         <div class="game-info">
           <div class="game-score">${gameInfo.score}</div>
           <div class="game-timer">${timerMinutes}<span class="game-timer-blink">:</span>${timerSeconds}</div>
-          <div class="game-turn">${gameInfo.turn}</div>
+          <div class="game-turn">${turnMsg}</div>
         </div>
-        <div class="piece-preview">
-          <img repeat.for="psrc of gameInfo.preview" src="/images/${psrc.toString(8)}.png">
+        <div class="preview">
+          <img repeat.for="psrc of gameInfo.preview" class="piece-preview" src="/images/${psrc.toString(8)}.png">
+        </div>
+        <div class="controls">
+          <button click.delegate="skipTurn($event)">Skip</button>
         </div>
         <div class="piece-bg"></div>
         <game-piece value.two-way="pieceVal" view-model.ref="piece"></game-piece>
@@ -21,7 +24,6 @@
 
 
       </div>
-      <button click.delegate="testGameState($event)">Click Me!</button>
     </div>
   </section>
 </template>

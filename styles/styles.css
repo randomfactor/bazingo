@@ -257,12 +257,28 @@ div.au-stagger {
   -webkit-animation:timerBlink 1s infinite; /* Safari and Chrome */
 }
 
-.piece-preview {
+.preview {
   border: double lightsalmon 5px;
+  height: 56px;
+  width: 50%;
+  float: left;
 }
 
-.piece-preview img {
+.piece-preview {
   margin: 8px;
+  float: right;
+}
+
+.controls {
+  border: double lightsalmon 5px;
+  height: 56px;
+  margin-left: 50%;
+  width: 50%;
+  text-align: center;
+}
+
+.controls button {
+  margin-top: 10px;
 }
 
 @keyframes timerBlink /* Firefox */

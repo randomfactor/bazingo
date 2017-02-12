@@ -19,10 +19,17 @@ class TimeMachine {
   }
 };
 
+class TestShuffler {
+  getRandomPieces(count) {
+    return  [0o262, 0o323, 0o260, 0o32];  // repeatable for testing
+  }
+}
+
 describe('the GameController', () => {
   it('scores a game wherein the player makes no moves', (done) => {
     let tm = new TimeMachine();
-    let sut = new GameController(tm);
+    let ps = new TestShuffler();
+    let sut = new GameController(tm, ps);
     sut.initialize();
     sut.joinRoom("12345", "barack");
     tm.advance(1000);     // this is ignored. game remains in stasis until tickled
@@ -59,7 +66,8 @@ describe('the GameController', () => {
   });
   it('scores a game wherein the player attains the highest score', (done) => {
     let tm = new TimeMachine();
-    let sut = new GameController(tm);
+    let ps = new TestShuffler();
+    let sut = new GameController(tm, ps);
     sut.initialize();
     sut.joinRoom("23456", "abe");
     sut.getGameStateForPlayer("12345").then((data) => {

@@ -34,6 +34,13 @@ export class GamePieceLock {
   }
 }
 
+export class GameMove {
+  constructor(x, y) {
+    this.X = x;
+    this.Y = y;
+  }
+}
+
 export class GameLogMessage {
   constructor(msg) {
     this.msg = msg;

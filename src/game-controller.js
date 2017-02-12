@@ -4,6 +4,7 @@
 
 import {inject} from 'aurelia-framework';
 import {GameBits} from 'game-bits';
+import {PieceShuffler} from 'piece-shuffler';
 
 export class GameClockFactory {
   getCurrentTime() {
@@ -11,17 +12,27 @@ export class GameClockFactory {
   }
 }
 
-@inject(GameClockFactory)
+@inject(GameClockFactory, PieceShuffler)
 export class GameController {
-  constructor(gcf) {
+  constructor(gcf, shuffler) {
     this.players = new Map();
-    this.initialize();
     this.gcf = gcf;
+    this.shuffler = shuffler;
+    this.initialize();
   }
 
   initialize() {
     this.gs = {id: "practice", turn: -1, timeout: GameController._intermissionDur, startedAt: null};
-    this.pieceOrder = [0o262, 0o323, 0o260, 0o32];  // TODO: randomize
+    this.pieceOrder = [0];
+  }
+
+  startNewGame() {
+    for (let [k, val] of this.players) {
+      val.board.set(0);
+      val.points = 0;
+      val.moves = [];
+    }
+    this.pieceOrder = this.shuffler.getRandomPieces(20);
   }
 
   joinRoom(playerId, nickName) {
@@ -52,6 +63,7 @@ export class GameController {
     return p;
   }
 
+
   recordPlayerMove(playerId, turn, offsetX, offsetY) {
     let player = this.players.get(playerId);
     if (player && this.gs.turn >= 0 && this.gs.turn < this.pieceOrder.length
@@ -61,6 +73,7 @@ export class GameController {
         let pieceVal = this.pieceOrder[this.gs.turn];
         if (player.board.combine(pieceVal, offsetX, offsetY) != beforeBits) {
           player.moves[this.gs.turn] = {piece: pieceVal, offX: offsetX, offY: offsetY};
+          console.log(`player ${playerId} moved: ${JSON.stringify(player.moves[this.gs.turn])}`);
         }
       }
     }
@@ -87,6 +100,9 @@ export class GameController {
       let missedTurns = Math.floor((curTime - startTime) / turnDur);
       missedTurns = Math.min(missedTurns, this.pieceOrder.length - this.gs.turn);
       if (missedTurns > 0) {
+        if (this.gs.turn < 0) {
+          this.startNewGame();      // timer elapsed at end of intermission
+        }
         this.checkPlayerPenalty(this.gs.turn, this.gs.turn + missedTurns);
         this.gs.turn += missedTurns;
         if (this.gs.turn < this.pieceOrder.length) {
@@ -103,6 +119,9 @@ export class GameController {
   }
 
   skipToNextTurn() {
+    if (this.gs.turn < 0) {
+      this.startNewGame();    // player skipped in intermission
+    }
     if (this.gs.turn < this.pieceOrder.length) {
       this.updatePlayerScores(this.gs.turn);
       this.gs.turn += 1;
@@ -121,7 +140,6 @@ export class GameController {
       if (turnNo < 0) {
         val.points = 0;     // initializing game
       } else if (typeof val.moves[turnNo] == 'undefined') {
-        console.log(`player ${k} penalized`);
         val.points += GameController._penaltyPts;
       } else {
         // players board may contain scoring blocks
@@ -147,17 +165,4 @@ export class GameController {
 
   static get _turnDur() { return 15 * 1000; }
   static get _intermissionDur() { return 120 * 1000; }
-
-  static get _allPieces() {
-    return [
-      0o20, 0o30, 0o220, 0o420, 0o120,                        // onesies, twosies
-      0o260, 0o230, 0o62, 0o32,                               // corners
-      0o70, 0o222, 0o421, 0o124,                              // three in row
-      0o360, 0o630, 0o132, 0o231,                             // shifts
-      0o262, 0o270, 0o232, 0o72,                              // keys
-      0o622, 0o322, 0o226, 0o223, 0o470, 0o74, 0o170, 0o71,   // ells
-      0o570, 0o75, 0o626, 0o323,                              // locks
-      0o525, 0o272                                            // checkerboard, cross
-    ];
-  }
 };

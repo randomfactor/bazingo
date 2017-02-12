@@ -5,24 +5,43 @@
 import {bindable, inject, computedFrom} from 'aurelia-framework';
 import {DOM} from 'aurelia-pal';
 import {EventAggregator} from 'aurelia-event-aggregator';
+import {GameController} from 'game-controller';
 import * as GameMsg from 'messages';
 
-@inject(DOM, EventAggregator)
+@inject(DOM, EventAggregator, GameController)
 export class GamePlay {
-  constructor(dom, ea, board, piece) {
-    this.pieceVal = 0x155;
-    this.boardVal = 0x1fac400;
+  constructor(dom, ea, gamectl) {
+    this.pieceVal = 0;
+    this.boardVal = 0;
 
     this.dom = dom;
     this.ea = ea;
+    this.gamectl = gamectl;
     ea.subscribe(GameMsg.GameLogMessage, msg => {
       this.logMessage(msg.toString());
+    });
+    ea.subscribe(GameMsg.GameMove, msg => {
+      console.log('received game move ' + JSON.stringify(msg));
+      this.playerMove(msg);
     });
     // this.board is a reference to the view model of the game board
     // this.piece is a reference to the view model of the game piece
 
     this.gameInfo = {score: "0 pts.", timer: 0, turn: "Starting...", preview: [0o626, 0x155]}
+    this.playerId = "54321";
     this.runningTimer = null;
+  }
+
+  attached() {
+    // first time initialization
+    this.gamectl.initialize();
+    this.gamectl.joinRoom(this.playerId, "Practice Pete");
+    this.updateGameState();
+  }
+
+  canDeactivate() {
+    this.runTimer(false);
+    return true;
   }
 
   @computedFrom("gameInfo.timer")
@@ -45,6 +64,15 @@ export class GamePlay {
     return s.length >= 2 ? s : '0' + s;
   }
 
+  @computedFrom("gameInfo.turn")
+  get turnMsg() {
+    if (this.gameInfo.turn >= 0) {
+      return `Turn ${this.gameInfo.turn + 1}`;
+    } else {
+      return 'Starting...';
+    }
+  }
+
   runTimer(val) {
     if (val) {
       if (!this.runningTimer) {
@@ -53,6 +81,7 @@ export class GamePlay {
           if (this.gameInfo.timer <= 0) {
             this.gameInfo.timer = 0;
             this.runTimer(false);
+            this.updateGameState()
           }
         }, 1000);
       }
@@ -64,11 +93,53 @@ export class GamePlay {
     }
   }
 
+  updateGameState() {
+    this.gamectl.getGameStateForPlayer(this.playerId).then(
+      (data) => {
+        this.pieceVal = data.gameState.pieceVal;
+        this.boardVal = (data.playerState && typeof data.playerState.boardVal == 'number') ? data.playerState.boardVal : 0;
+        console.log('player state: ' + JSON.stringify(data.playerState));
+        this.gameInfo.score = `${data.playerState.playerPts} pts.`;
+        this.gameInfo.timer = data.gameState.turnTimer;
+        if (this.gameInfo.timer > 0) {
+          this.runTimer(true);
+        }
+        this.gameInfo.turn = data.gameState.gameTurn;
+        this.gameInfo.preview = data.gameState.piecePreview;
+      },
+      (err) => {
+        this.logMessage('Game Controller error: ' + JSON.stringify(err));
+      })
+  }
+
+  /*
+   data: {gameState: {roomId, gameId, gameTurn, turnTimer, pieceVal, piecePreview},
+   playerState: {playerId, playerPts, boardVal}}
+   */
+
   logMessage(msg) {
     let tn = this.dom.createTextNode(msg);
     this.gameArea.appendChild(tn);
     let br = this.dom.createElement('br');
     this.gameArea.appendChild(br);
+  }
+
+  skipTurn() {
+    this.runTimer(false);
+    this.gamectl.skipToNextTurn();
+    this.updateGameState();
+  }
+
+  playerMove(msg) {
+    this.gamectl.recordPlayerMove(this.playerId, this.gameInfo.turn, msg.X, msg.Y)
+      .then(
+        (data) => {
+          console.log('player moved: ' + JSON.stringify(data.playerState));
+          this.skipTurn();
+        },
+        (err) => {
+          this.logMessage('Game Controller error: ' + JSON.stringify(err));
+      });
   }
 
   testGameState(evt) {
@@ -99,15 +170,4 @@ export class GamePlay {
         break;
     }
   }
-
-  _pieces = [
-    0o20, 0o30, 0o220, 0o420, 0o120,                        // onesies, twosies
-    0o260, 0o230, 0o62, 0o32,                               // corners
-    0o70, 0o222, 0o421, 0o124,                              // three in row
-    0o360, 0o630, 0o132, 0o231,                             // shifts
-    0o262, 0o270, 0o232, 0o72,                              // keys
-    0o622, 0o322, 0o226, 0o223, 0o470, 0o74, 0o170, 0o71,   // ells
-    0o570, 0o75, 0o626, 0o323,                              // locks
-    0o525, 0o272                                            // checkerboard, cross
-  ]
 }

@@ -38,7 +38,7 @@ export class GameBoardCustomElement extends GameTray {
   }
 
   valueChanged(newBits, oldBits) {
-    console.log(`game board: ${newBits.toString(16)} (was ${oldBits ? oldBits.toString(16) : 'null'})`);
+    //console.log(`game board: ${newBits.toString(16)} (was ${oldBits ? oldBits.toString(16) : 'null'})`);
 
     this.renderBits(newBits);
     this.bits.set(newBits);
@@ -57,8 +57,8 @@ export class GameBoardCustomElement extends GameTray {
     let piece = evt.detail.dragEvent.target;
     let indX = toBoardIndex(piece.offsetLeft - target.offsetLeft);
     let indY = toBoardIndex(piece.offsetTop - target.offsetTop);
-    console.log(`relX: ${piece.offsetLeft - target.offsetLeft}  relY: ${piece.offsetTop - target.offsetTop}  piece: ${this.pieceValue.toString(16)}`);
-    console.log(`indX: ${toBoardIndex(piece.offsetLeft - target.offsetLeft)}  indY: ${toBoardIndex(piece.offsetTop - target.offsetTop)}`);
+    //console.log(`relX: ${piece.offsetLeft - target.offsetLeft}  relY: ${piece.offsetTop - target.offsetTop}  piece: ${this.pieceValue.toString(16)}`);
+    //console.log(`indX: ${toBoardIndex(piece.offsetLeft - target.offsetLeft)}  indY: ${toBoardIndex(piece.offsetTop - target.offsetTop)}`);
 
     if (indX >= -1 && indX <= 3 && indY >= -1 && indY <= 3
         && this.bits.test(this.pieceValue, 2 - indX, 2 - indY)) {
@@ -75,6 +75,8 @@ export class GameBoardCustomElement extends GameTray {
     let indY = toBoardIndex(posY - this.board.offsetTop);
 
     let newBits = this.bits.combine(pieceVal, 2 - indX, 2 - indY);
-    this.value = newBits;       // TODO: is renderBits needed here?
+    this.value = newBits;       // framework will render because value changed
+
+    this.ea.publish(new GameMsg.GameMove(2 - indX, 2 - indY));
   }
 }
