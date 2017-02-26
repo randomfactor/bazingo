@@ -1,15 +1,15 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+let express = require('express');
+let path = require('path');
+let favicon = require('serve-favicon');
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-var tvShows = require('./routes/tv-shows');
+let index = require('./routes/index');
+let users = require('./routes/users');
+let tvShows = require('./routes/tv-shows');
 
-var app = express();
+let app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/jspm_packages', express.static('jspm_packages'));
-app.use('/styles', express.static('styles'));
+app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use('/dist', express.static('dist'));
 
 app.use('/', index);
@@ -32,7 +32,7 @@ app.use('/api/tv-shows', tvShows);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });

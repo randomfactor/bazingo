@@ -12,6 +12,7 @@
         </div>
         <div class="preview">
           <img repeat.for="psrc of gameInfo.preview" class="piece-preview" src="/images/${psrc.toString(8)}.png">
+          <img class="piece-preview" src="/images/ra.png">
         </div>
         <div class="controls">
           <button click.delegate="skipTurn($event)">Skip</button>
@@ -26,4 +27,11 @@
       </div>
     </div>
   </section>
+  <footer>
+    <div>
+      Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from
+      <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by
+      <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
+    </div>
+  </footer>
 </template>

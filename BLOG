@@ -40,7 +40,3 @@
 
 > jspm install interact=npm:interact.js     # how to deal with funky dot js
 # added bazingo-draggable.js to bind to 'enabled'
-
-> jspm install npm:aurelia-mobile-plugin
-# this is causing problems. mouse clicks are being synthesized to taps and
-# taps are being synthesized to mouse clicks. WHY??!!

@@ -70,3 +70,64 @@ Inquire players
 Move
   Arguments: roomId, gameId, playerId, gameTurn, indX, indY
   Returns: <same as Inquire game state>
+
+
+Server-side Operations
+
+Log In
+Log Out
+Create Room
+Create New Game
+Join Game
+Inquire Game Current State
+Inquire Player Current State
+
+
+----------------------------------------------------
+Database
+----------------------------------------------------
+
+Player
+---------------------
+  id
+  auth [{source, source_id}, ...] // move to its own table
+  nickName
+  bank
+  lastRoom {id, name, entryTS}
+Room
+-------------------------
+  id
+  name
+  currentGame
+  pastGames [{gameId}, …]
+
+Game
+-------------------------
+  id
+  startTS
+  endTS
+  turnDuration
+  payout
+  orderedPieces [nnn, …]
+
+PlayerMoves
+-------------------------
+  playerId, gameId
+  gameEndTS
+  moves [ {indX, indY}, …]
+  finalScore
+
+
+
+-----------------------------------------
+Server
+-----------------------------------------
+
+
+
+Game Instance
+---------------------
+  gameState - same as DB Game
+  turnNo
+  players {playerId: {nickName, score, boardVal, moves[]}, ... }
+
